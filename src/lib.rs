@@ -1,3 +1,5 @@
+#![no_std]
+
 pub struct Wgs84 {
     longitude: f64,
     latitude: f64,
@@ -14,11 +16,11 @@ pub struct Ch1903 {
 
 pub fn to_ch1903(wgs: &Wgs84) -> Ch1903 {
     let phi = (3600.0 * wgs.latitude - 169_028.66) / 10_000.0;
-    let phi_2 = phi.powi(2);
-    let phi_3 = phi.powi(3);
+    let phi_2 = phi * phi;
+    let phi_3 = phi * phi_2;
     let lambda = (3600.0 * wgs.longitude - 26_782.5) / 10_000.0;
-    let lambda_2 = lambda.powi(2);
-    let lambda_3 = lambda.powi(3);
+    let lambda_2 = lambda * lambda;
+    let lambda_3 = lambda * lambda_2;
 
     let e = 2_600_072.37 + 211_455.93 * lambda
         - 10938.51 * lambda * phi
@@ -39,11 +41,11 @@ pub fn to_ch1903(wgs: &Wgs84) -> Ch1903 {
 
 pub fn to_wgs84(ch: &Ch1903) -> Wgs84 {
     let y = (ch.east - 600_000.0) / 1_000_000.0;
-    let y_2 = y.powi(2);
-    let y_3 = y.powi(3);
+    let y_2 = y * y;
+    let y_3 = y * y_2;
     let x = (ch.north - 200_000.0) / 1_000_000.0;
-    let x_2 = x.powi(2);
-    let x_3 = x.powi(3);
+    let x_2 = x * x;
+    let x_3 = x * x_2;
     let lambda = 2.6779094 + 4.728982 * y + 0.791484 * y * x + 0.1306 * y * x_2 - 0.0436 * y_3;
     let phi = 16.9023892 + 3.238272 * x
         - 0.270978 * y_2
