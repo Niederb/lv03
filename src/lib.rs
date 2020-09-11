@@ -5,7 +5,9 @@ pub struct Wgs84 {
 }
 
 pub struct Ch1903 {
+    /// Coordinate pointing north. (X coordinate)
     north: f64,
+    /// Coordinate pointing east. (Y coordinate)
     east: f64,
     altitude: f64,
 }
@@ -63,7 +65,7 @@ pub fn to_wgs84(ch: Ch1903) -> Wgs84 {
 mod tests {
     use super::*;
     #[test]
-    fn toCh1903() {
+    fn to_ch1903_bundeshaus() {
         let wgs = Wgs84 {
             longitude: 7.44417,
             latitude: 46.94658,
@@ -76,7 +78,7 @@ mod tests {
     }
 
     #[test]
-    fn toCh1903_2() {
+    fn to_ch1903_700_100() {
         let wgs = Wgs84 {
             longitude: 8.730497076,
             latitude: 46.044130339,
@@ -89,7 +91,7 @@ mod tests {
     }
 
     #[test]
-    fn toWgs84() {
+    fn to_wgs84_700_100() {
         let ch = Ch1903 {
             east: 700_000.0,
             north: 100_000.0,

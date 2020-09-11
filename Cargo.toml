@@ -5,12 +5,12 @@ authors = ["Thomas Niederberger <thomas@niederb.ch>"]
 edition = "2018"
 
 license = "MIT OR Apache-2.0"
-description = "A tool to compare single lines by tokenizing them into chunks"
+description = "Conversion between the Swiss coordinate system and WGS84 coordinates"
 readme = "README.md"
 homepage = "https://github.com/niederb/ch1903"
 repository = "https://github.com/niederb/ch1903"
-keywords = ["cli", "diff", "compare", "text"]
-categories = ["command-line-utilities"]
+keywords = ["coordinates", "Switzerland"]
+categories = ["algorithms"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
