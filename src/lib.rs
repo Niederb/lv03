@@ -12,7 +12,7 @@ pub struct Ch1903 {
     altitude: f64,
 }
 
-pub fn to_ch1903(wgs: Wgs84) -> Ch1903 {
+pub fn to_ch1903(wgs: &Wgs84) -> Ch1903 {
     let phi = (3600.0 * wgs.latitude - 169_028.66) / 10_000.0;
     let phi_2 = phi.powi(2);
     let phi_3 = phi.powi(3);
@@ -37,7 +37,7 @@ pub fn to_ch1903(wgs: Wgs84) -> Ch1903 {
     }
 }
 
-pub fn to_wgs84(ch: Ch1903) -> Wgs84 {
+pub fn to_wgs84(ch: &Ch1903) -> Wgs84 {
     let y = (ch.east - 600_000.0) / 1_000_000.0;
     let y_2 = y.powi(2);
     let y_3 = y.powi(3);
@@ -66,28 +66,17 @@ mod tests {
     use super::*;
     #[test]
     fn to_ch1903_bundeshaus() {
+        let ch = Ch1903 {
+            east: 600_421.43,
+            north: 199_498.43,
+            altitude: 542.8,
+        };
         let wgs = Wgs84 {
             longitude: 7.44417,
             latitude: 46.94658,
             altitude: 542.8,
         };
-        let ch = to_ch1903(wgs);
-        println!("east/north: {}/{}", ch.east, ch.north);
-        assert!((600_421.43 - ch.east).abs() < 2.0);
-        assert!((199_498.43 - ch.north).abs() < 2.0);
-    }
-
-    #[test]
-    fn to_ch1903_700_100() {
-        let wgs = Wgs84 {
-            longitude: 8.730497076,
-            latitude: 46.044130339,
-            altitude: 542.8,
-        };
-        let ch = to_ch1903(wgs);
-        println!("east/north: {}/{}", ch.east, ch.north);
-        assert!((700_000.00 - ch.east).abs() < 2.0);
-        assert!((100_000.00 - ch.north).abs() < 2.0);
+        test_conversions(&ch, &wgs);
     }
 
     #[test]
@@ -97,9 +86,21 @@ mod tests {
             north: 100_000.0,
             altitude: 542.8,
         };
-        let wgs = to_wgs84(ch);
-        //assert_eq!(8.730497076, wgs.longitude);
-        assert!((8.730497076 - wgs.longitude).abs() < 0.001);
-        assert!((46.044130339 - wgs.latitude).abs() < 0.001);
+        let wgs = Wgs84 {
+            longitude: 8.730497076,
+            latitude: 46.044130339,
+            altitude: 542.8,
+        };
+        test_conversions(&ch, &wgs);
+    }
+
+    fn test_conversions(ch: &Ch1903, wgs: &Wgs84) {
+        let wgs_converted = to_wgs84(ch);
+        assert!((wgs_converted.longitude - wgs.longitude).abs() < 0.001);
+        assert!((wgs_converted.latitude - wgs.latitude).abs() < 0.001);
+
+        let ch_converted = to_ch1903(wgs);
+        assert!((ch_converted.east - ch.east).abs() < 2.0);
+        assert!((ch_converted.north - ch.north).abs() < 2.0);
     }
 }
