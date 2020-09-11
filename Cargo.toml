@@ -1,0 +1,17 @@
+[package]
+name = "ch1903"
+version = "0.1.0"
+authors = ["Thomas Niederberger <thomas@niederb.ch>"]
+edition = "2018"
+
+license = "MIT OR Apache-2.0"
+description = "A tool to compare single lines by tokenizing them into chunks"
+readme = "README.md"
+homepage = "https://github.com/niederb/ch1903"
+repository = "https://github.com/niederb/ch1903"
+keywords = ["cli", "diff", "compare", "text"]
+categories = ["command-line-utilities"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
