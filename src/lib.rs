@@ -6,7 +6,7 @@ pub struct Wgs84 {
     altitude: f64,
 }
 
-impl  Wgs84 {
+impl Wgs84 {
     pub fn to_lv03(&self) -> Lv03 {
         let phi = (3600.0 * self.latitude - 169_028.66) / 10_000.0;
         let phi_2 = phi * phi;
@@ -14,7 +14,7 @@ impl  Wgs84 {
         let lambda = (3600.0 * self.longitude - 26_782.5) / 10_000.0;
         let lambda_2 = lambda * lambda;
         let lambda_3 = lambda * lambda_2;
-    
+
         let e = 2_600_072.37 + 211_455.93 * lambda
             - 10938.51 * lambda * phi
             - 0.36 * lambda * phi_2
@@ -74,7 +74,7 @@ impl Lv03 {
             - 0.0447 * y_2 * x
             - 0.0140 * x_3;
         let altitude = self.altitude + 49.55 - 12.6 * y - 22.64 * x;
-    
+
         let lambda = lambda * 100.0 / 36.0;
         let phi = phi * 100.0 / 36.0;
         Wgs84 {
