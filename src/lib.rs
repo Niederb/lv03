@@ -6,12 +6,32 @@ pub struct Wgs84 {
     altitude: f64,
 }
 
+/// Coordinate point in the Ch1903 system
 pub struct Ch1903 {
     /// Coordinate pointing north. (X coordinate)
     north: f64,
     /// Coordinate pointing east. (Y coordinate)
     east: f64,
     altitude: f64,
+}
+
+impl Ch1903 {
+    /// Can return none if the given coordinates do not lead to a valid representation in the swiss coordinate system
+    pub fn new(north: f64, east: f64, altitude: f64) -> Option<Self> {
+        if north < 0.0 || east < 0.0 {
+            // North and east coordinates must be positive
+            None
+        } else if north > east {
+            // East coordinate must always be bigger than north
+            None
+        } else {
+            Some(Ch1903 {
+                north,
+                east,
+                altitude,
+            })
+        }
+    }
 }
 
 pub fn to_ch1903(wgs: &Wgs84) -> Ch1903 {
@@ -66,6 +86,17 @@ pub fn to_wgs84(ch: &Ch1903) -> Wgs84 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn test_conversions(ch: &Ch1903, wgs: &Wgs84) {
+        let wgs_converted = to_wgs84(ch);
+        assert!((wgs_converted.longitude - wgs.longitude).abs() < 0.001);
+        assert!((wgs_converted.latitude - wgs.latitude).abs() < 0.001);
+
+        let ch_converted = to_ch1903(wgs);
+        assert!((ch_converted.east - ch.east).abs() < 2.0);
+        assert!((ch_converted.north - ch.north).abs() < 2.0);
+    }
+
     #[test]
     fn to_ch1903_bundeshaus() {
         let ch = Ch1903 {
@@ -96,13 +127,15 @@ mod tests {
         test_conversions(&ch, &wgs);
     }
 
-    fn test_conversions(ch: &Ch1903, wgs: &Wgs84) {
-        let wgs_converted = to_wgs84(ch);
-        assert!((wgs_converted.longitude - wgs.longitude).abs() < 0.001);
-        assert!((wgs_converted.latitude - wgs.latitude).abs() < 0.001);
+    #[test]
+    fn test_negative() {
+        assert!(Ch1903::new(-1.0, 2.0, 5.0).is_none());
+        assert!(Ch1903::new(1.0, -2.0, 5.0).is_none());
+        assert!(Ch1903::new(1.0, 2.0, -5.0).is_some());
+    }
 
-        let ch_converted = to_ch1903(wgs);
-        assert!((ch_converted.east - ch.east).abs() < 2.0);
-        assert!((ch_converted.north - ch.north).abs() < 2.0);
+    #[test]
+    fn test_coordinates_swapped() {
+        assert!(Ch1903::new(600_000.0, 200_000.0, 500.0).is_none());
     }
 }
