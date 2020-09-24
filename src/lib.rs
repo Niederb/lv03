@@ -22,8 +22,8 @@ impl Wgs84 {
         let n = 1_200_147.07 + 308_807.95 * phi + 3745.25 * lambda_2 + 76.63 * phi_2
             - 194.56 * lambda_2 * phi
             + 119.79 * phi_3;
-        let y = e - 2000_000.00;
-        let x = n - 1000_000.00;
+        let y = e - 2_000_000.00;
+        let x = n - 1_000_000.00;
         let altitude = self.altitude - 49.55 + 2.73 * lambda + 6.94 * phi;
         Lv03 {
             north: x,
@@ -83,6 +83,13 @@ impl Lv03 {
             altitude,
         }
     }
+
+    pub fn distance_squared(&self, p: &Lv03) -> f64 {
+        let d_north = self.north - p.north;
+        let d_east = self.east - p.east;
+        let d_altitude = self.altitude - p.altitude;
+        d_north * d_north + d_east * d_east + d_altitude * d_altitude
+    }
 }
 
 #[cfg(test)]
@@ -139,5 +146,12 @@ mod tests {
     #[test]
     fn test_coordinates_swapped() {
         assert!(Lv03::new(600_000.0, 200_000.0, 500.0).is_none());
+    }
+
+    #[test]
+    fn test_distance() {
+        let p1 = Lv03::new(200_000.0, 600_000.0, 500.0).unwrap();
+        let p2 = Lv03::new(200_002.0, 600_000.0, 500.0).unwrap();
+        assert_eq!(4.0, p1.distance_squared(&p2));
     }
 }
