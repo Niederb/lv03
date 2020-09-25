@@ -1,5 +1,6 @@
 #![no_std]
 
+#[derive(Clone, Debug, PartialEq)]
 pub struct Wgs84 {
     longitude: f64,
     latitude: f64,
@@ -33,7 +34,19 @@ impl Wgs84 {
     }
 }
 
+
 /// Coordinate point in the Lv03 system
+#[derive(Clone, Debug, PartialEq)]
+pub struct Lv95 {
+    /// Coordinate pointing north. (X coordinate)
+    north: f64,
+    /// Coordinate pointing east. (Y coordinate)
+    east: f64,
+    altitude: f64,
+}
+
+/// Coordinate point in the Lv03 system
+#[derive(Clone, Debug, PartialEq)]
 pub struct Lv03 {
     /// Coordinate pointing north. (X coordinate)
     north: f64,
@@ -89,6 +102,28 @@ impl Lv03 {
         let d_east = self.east - p.east;
         let d_altitude = self.altitude - p.altitude;
         d_north * d_north + d_east * d_east + d_altitude * d_altitude
+    }
+}
+
+impl Lv95 {
+    pub fn new(north: f64, east: f64, altitude: f64) -> Option<Self> {
+        let p = Lv03::new(north, east, altitude);
+        match p {
+            Some(p) => Some(p.into()),
+            None => None,
+        }
+    }
+}
+
+impl From<Lv95> for Lv03 {
+    fn from(p: Lv95) -> Self {
+        Lv03 { north: p.north - 1_000_000.0, east: p.east - 2_000_000.0, altitude: p.altitude}
+    }
+}
+
+impl From<Lv03> for Lv95 {
+    fn from(p: Lv03) -> Self {
+        Lv95 { north: p.north + 1_000_000.0, east: p.east + 2_000_000.0, altitude: p.altitude}
     }
 }
 
@@ -153,5 +188,12 @@ mod tests {
         let p1 = Lv03::new(200_000.0, 600_000.0, 500.0).unwrap();
         let p2 = Lv03::new(200_002.0, 600_000.0, 500.0).unwrap();
         assert_eq!(4.0, p1.distance_squared(&p2));
+    }
+
+    #[test]
+    fn test_lv_conversion() {
+        let p1 = Lv03::new(200_000.0, 600_000.0, 500.0).unwrap();
+        let p2: Lv95 = p1.clone().into();
+        assert_eq!(p1, p2.into());
     }
 }
