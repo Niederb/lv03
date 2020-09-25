@@ -111,6 +111,11 @@ impl Lv95 {
             None => None,
         }
     }
+
+    pub fn to_wgs84(&self) -> Wgs84 {
+        let p03: Lv03 = self.clone().into();
+        p03.to_wgs84()
+    }
 }
 
 impl From<Lv95> for Lv03 {
@@ -130,6 +135,18 @@ impl From<Lv03> for Lv95 {
             east: p.east + 2_000_000.0,
             altitude: p.altitude,
         }
+    }
+}
+
+impl From<Lv03> for Wgs84 {
+    fn from(p: Lv03) -> Self {
+        p.to_wgs84()
+    }
+}
+
+impl From<Lv95> for Wgs84 {
+    fn from(p: Lv95) -> Self {
+        p.to_wgs84()
     }
 }
 
