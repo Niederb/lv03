@@ -1,6 +1,6 @@
 [package]
-name = "ch1903"
-version = "0.1.0"
+name = "lv03"
+version = "0.0.1"
 authors = ["Thomas Niederberger <thomas@niederb.ch>"]
 edition = "2018"
 
