@@ -34,7 +34,6 @@ impl Wgs84 {
     }
 }
 
-
 /// Coordinate point in the Lv03 system
 #[derive(Clone, Debug, PartialEq)]
 pub struct Lv95 {
@@ -117,13 +116,21 @@ impl Lv95 {
 
 impl From<Lv95> for Lv03 {
     fn from(p: Lv95) -> Self {
-        Lv03 { north: p.north - 1_000_000.0, east: p.east - 2_000_000.0, altitude: p.altitude}
+        Lv03 {
+            north: p.north - 1_000_000.0,
+            east: p.east - 2_000_000.0,
+            altitude: p.altitude,
+        }
     }
 }
 
 impl From<Lv03> for Lv95 {
     fn from(p: Lv03) -> Self {
-        Lv95 { north: p.north + 1_000_000.0, east: p.east + 2_000_000.0, altitude: p.altitude}
+        Lv95 {
+            north: p.north + 1_000_000.0,
+            east: p.east + 2_000_000.0,
+            altitude: p.altitude,
+        }
     }
 }
 
@@ -194,6 +201,9 @@ mod tests {
     fn test_lv_conversion() {
         let p1 = Lv03::new(200_000.0, 600_000.0, 500.0).unwrap();
         let p2: Lv95 = p1.clone().into();
-        assert_eq!(p1, p2.into());
+        assert_eq!(p1, p2.clone().into());
+
+        assert_eq!(p1.east + 2_000_000.0, p2.east);
+        assert_eq!(p1.north + 1_000_000.0, p2.north);
     }
 }
