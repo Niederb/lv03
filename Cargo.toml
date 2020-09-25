@@ -7,8 +7,8 @@ edition = "2018"
 license = "MIT OR Apache-2.0"
 description = "Conversion between the Swiss coordinate system and WGS84 coordinates"
 readme = "README.md"
-homepage = "https://github.com/niederb/ch1903"
-repository = "https://github.com/niederb/ch1903"
+homepage = "https://github.com/niederb/lv03"
+repository = "https://github.com/niederb/lv03"
 keywords = ["coordinates", "Switzerland"]
 categories = ["algorithms"]
 
