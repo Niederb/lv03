@@ -1,5 +1,6 @@
 #![no_std]
 
+/// WGS84 coordinate representation
 #[derive(Clone, Debug, PartialEq)]
 pub struct Wgs84 {
     longitude: f64,
@@ -8,7 +9,7 @@ pub struct Wgs84 {
 }
 
 impl Wgs84 {
-    pub fn to_lv03(&self) -> Lv03 {
+    pub fn to_lv03(&self) -> Option<Lv03> {
         let phi = (3600.0 * self.latitude - 169_028.66) / 10_000.0;
         let phi_2 = phi * phi;
         let phi_3 = phi * phi_2;
@@ -26,11 +27,7 @@ impl Wgs84 {
         let y = e - 2_000_000.00;
         let x = n - 1_000_000.00;
         let altitude = self.altitude - 49.55 + 2.73 * lambda + 6.94 * phi;
-        Lv03 {
-            north: x,
-            east: y,
-            altitude,
-        }
+        Lv03::new(x, y, altitude)
     }
 }
 
@@ -57,8 +54,10 @@ pub struct Lv03 {
 impl Lv03 {
     /// Can return none if the given coordinates do not lead to a valid representation in the swiss coordinate system
     pub fn new(north: f64, east: f64, altitude: f64) -> Option<Self> {
-        if north < 0.0 || east < 0.0 {
-            // North and east coordinates must be positive
+        if north < 70_000.0 || east < 480_000.0 {
+            // Minimum coordinates to fall within Switzerland
+            None
+        } else if north > 300_000.0 || east > 850_000.0 {
             None
         } else if north > east {
             // East coordinate must always be bigger than north
@@ -143,7 +142,7 @@ mod tests {
         assert!((wgs_converted.longitude - wgs.longitude).abs() < 0.001);
         assert!((wgs_converted.latitude - wgs.latitude).abs() < 0.001);
 
-        let ch_converted = wgs.to_lv03();
+        let ch_converted = wgs.to_lv03().unwrap();
         assert!((ch_converted.east - ch.east).abs() < 2.0);
         assert!((ch_converted.north - ch.north).abs() < 2.0);
     }
@@ -182,7 +181,7 @@ mod tests {
     fn test_negative() {
         assert!(Lv03::new(-1.0, 2.0, 5.0).is_none());
         assert!(Lv03::new(1.0, -2.0, 5.0).is_none());
-        assert!(Lv03::new(1.0, 2.0, -5.0).is_some());
+        assert!(Lv03::new(250_000.0, 500_000.0, -5.0).is_some());
     }
 
     #[test]

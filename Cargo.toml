@@ -9,7 +9,7 @@ description = "Conversion between the Swiss coordinate system and WGS84 coordina
 readme = "README.md"
 homepage = "https://github.com/niederb/lv03"
 repository = "https://github.com/niederb/lv03"
-keywords = ["coordinates", "Switzerland"]
+keywords = ["coordinates", "Switzerland", "Swiss"]
 categories = ["algorithms"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
