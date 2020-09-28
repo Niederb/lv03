@@ -31,29 +31,32 @@ impl Wgs84 {
     }
 }
 
-/// Coordinate point in the Lv03 system
+/// Coordinate point in the LV95 system (Landesvermessung 1995, CH1903+)
 #[derive(Clone, Debug, PartialEq)]
 pub struct Lv95 {
     /// Coordinate pointing north. (X coordinate)
     north: f64,
     /// Coordinate pointing east. (Y coordinate)
     east: f64,
+    /// Meters above sea level (Mediterranean Sea)
     altitude: f64,
 }
 
-/// Coordinate point in the Lv03 system
+/// Coordinate point in the LV03 system (Landesvermessung 1903, CH1903)
 #[derive(Clone, Debug, PartialEq)]
 pub struct Lv03 {
     /// Coordinate pointing north. (X coordinate)
     north: f64,
     /// Coordinate pointing east. (Y coordinate)
     east: f64,
+    /// Meters above sea level (Mediterranean Sea)
     altitude: f64,
 }
 
 impl Lv03 {
     /// Can return none if the given coordinates do not lead to a valid representation in the swiss coordinate system
     pub fn new(north: f64, east: f64, altitude: f64) -> Option<Self> {
+        #[allow(clippy::if_same_then_else)]
         if north < 70_000.0 || east < 480_000.0 {
             // Minimum coordinates to fall within Switzerland
             None
@@ -239,5 +242,4 @@ mod tests {
         assert_eq!(p1.east + 2_000_000.0, p2.east);
         assert_eq!(p1.north + 1_000_000.0, p2.north);
     }
-
 }
