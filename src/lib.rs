@@ -154,19 +154,36 @@ impl From<Lv95> for Wgs84 {
 mod tests {
     use super::*;
 
-    fn test_conversions(ch: &Lv03, wgs: &Wgs84) {
-        let wgs_converted = ch.to_wgs84();
+    fn test_conversions(lv: &Lv03, wgs: &Wgs84) {
+        let wgs_converted = lv.to_wgs84();
         assert!((wgs_converted.longitude - wgs.longitude).abs() < 0.001);
         assert!((wgs_converted.latitude - wgs.latitude).abs() < 0.001);
 
-        let ch_converted = wgs.to_lv03().unwrap();
-        assert!((ch_converted.east - ch.east).abs() < 2.0);
-        assert!((ch_converted.north - ch.north).abs() < 2.0);
+        let lv_converted = wgs.to_lv03().unwrap();
+        assert!((lv_converted.east - lv.east).abs() < 2.0);
+        assert!((lv_converted.north - lv.north).abs() < 2.0);
+
+        test_roundtrip_wgs(lv);
+        test_roundtrip_lv(lv);
+    }
+
+    fn test_roundtrip_lv(lv03: &Lv03) {
+        let lv95: Lv95 = lv03.clone().into();
+        let lv03_converted: Lv03 = lv95.into();
+        assert!(lv03.distance_squared(&lv03_converted) < 0.001);
+    }
+
+    fn test_roundtrip_wgs(lv: &Lv03) {
+        let wgs = lv.to_wgs84();
+        let lv03 = wgs.to_lv03().unwrap();
+
+        // Should be within one meter
+        assert!(lv03.distance_squared(lv) < 1.0);
     }
 
     #[test]
     fn to_lv03_bundeshaus() {
-        let ch = Lv03 {
+        let lv = Lv03 {
             east: 600_421.43,
             north: 199_498.43,
             altitude: 542.8,
@@ -176,12 +193,12 @@ mod tests {
             latitude: 46.94658,
             altitude: 542.8,
         };
-        test_conversions(&ch, &wgs);
+        test_conversions(&lv, &wgs);
     }
 
     #[test]
     fn to_wgs84_700_100() {
-        let ch = Lv03 {
+        let lv = Lv03 {
             east: 700_000.0,
             north: 100_000.0,
             altitude: 542.8,
@@ -191,7 +208,7 @@ mod tests {
             latitude: 46.044130339,
             altitude: 542.8,
         };
-        test_conversions(&ch, &wgs);
+        test_conversions(&lv, &wgs);
     }
 
     #[test]
@@ -222,4 +239,5 @@ mod tests {
         assert_eq!(p1.east + 2_000_000.0, p2.east);
         assert_eq!(p1.north + 1_000_000.0, p2.north);
     }
+
 }
