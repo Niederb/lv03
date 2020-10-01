@@ -1,11 +1,24 @@
 #![no_std]
 
+#[cfg(feature = "nav-types-conversion")]
+use nav_types::WGS84;
+
 /// WGS84 coordinate representation
 #[derive(Clone, Debug, PartialEq)]
 pub struct Wgs84 {
+    /// Longitude in degrees
     longitude: f64,
+    /// Latitude in degrees
     latitude: f64,
+    /// Altitude in meters
     altitude: f64,
+}
+
+#[cfg(feature = "nav-types-conversion")]
+impl Into<WGS84<f64>> for Wgs84 {
+    fn into(self) -> WGS84<f64> {
+        WGS84::from_degrees_and_meters(self.latitude, self.longitude, self.altitude)
+    }
 }
 
 impl Wgs84 {

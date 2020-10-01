@@ -9,9 +9,12 @@ description = "Conversion between the Swiss coordinate system and WGS84 coordina
 readme = "README.md"
 homepage = "https://github.com/niederb/lv03"
 repository = "https://github.com/niederb/lv03"
-keywords = ["coordinates", "Switzerland", "Swiss"]
+keywords = ["coordinates", "Switzerland", "Swiss", "navigation", "wgs84"]
 categories = ["algorithms"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[features]
+default = []
+nav-types-conversion = ["nav-types"]
 
 [dependencies]
+nav-types = { version = "0.5.0", optional = true }
