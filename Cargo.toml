@@ -5,7 +5,7 @@ authors = ["Thomas Niederberger <thomas@niederb.ch>"]
 edition = "2018"
 
 license = "MIT OR Apache-2.0"
-description = "Conversion between the Swiss coordinate system and WGS84 coordinates"
+description = "Conversion between the Swiss coordinate system (LV03/CH1903 or LV95/CH1903+) and WGS84 coordinates"
 readme = "README.md"
 homepage = "https://github.com/niederb/lv03"
 repository = "https://github.com/niederb/lv03"

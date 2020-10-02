@@ -7,11 +7,11 @@ use nav_types::WGS84;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Wgs84 {
     /// Longitude in degrees
-    longitude: f64,
+    pub longitude: f64,
     /// Latitude in degrees
-    latitude: f64,
+    pub latitude: f64,
     /// Altitude in meters
-    altitude: f64,
+    pub altitude: f64,
 }
 
 #[cfg(feature = "nav-types-conversion")]
@@ -21,7 +21,20 @@ impl Into<WGS84<f64>> for Wgs84 {
     }
 }
 
+#[cfg(feature = "nav-types-conversion")]
+impl From<WGS84<f64>> for Wgs84 {
+    fn from(p: WGS84<f64>) -> Self {
+        Wgs84 {
+            latitude: p.latitude_degrees(),
+            longitude: p.longitude_degrees(),
+            altitude: p.altitude(),
+        }
+    }
+}
+
 impl Wgs84 {
+    /// For implementation details see the document
+    /// "Näherungsformeln für die Transformation zwischen Schweizer Projektionskoordinaten und WGS84"
     pub fn to_lv03(&self) -> Option<Lv03> {
         let phi = (3600.0 * self.latitude - 169_028.66) / 10_000.0;
         let phi_2 = phi * phi;
@@ -48,9 +61,9 @@ impl Wgs84 {
 #[derive(Clone, Debug, PartialEq)]
 pub struct Lv95 {
     /// Coordinate pointing north. (X coordinate)
-    north: f64,
+    pub north: f64,
     /// Coordinate pointing east. (Y coordinate)
-    east: f64,
+    pub east: f64,
     /// Meters above sea level (Mediterranean Sea)
     altitude: f64,
 }
@@ -59,11 +72,11 @@ pub struct Lv95 {
 #[derive(Clone, Debug, PartialEq)]
 pub struct Lv03 {
     /// Coordinate pointing north. (X coordinate)
-    north: f64,
+    pub north: f64,
     /// Coordinate pointing east. (Y coordinate)
-    east: f64,
+    pub east: f64,
     /// Meters above sea level (Mediterranean Sea)
-    altitude: f64,
+    pub altitude: f64,
 }
 
 impl Lv03 {
@@ -87,6 +100,8 @@ impl Lv03 {
         }
     }
 
+    /// For implementation details see the document
+    /// "Näherungsformeln für die Transformation zwischen Schweizer Projektionskoordinaten und WGS84"
     pub fn to_wgs84(&self) -> Wgs84 {
         let y = (self.east - 600_000.0) / 1_000_000.0;
         let y_2 = y * y;
@@ -254,5 +269,22 @@ mod tests {
 
         assert_eq!(p1.east + 2_000_000.0, p2.east);
         assert_eq!(p1.north + 1_000_000.0, p2.north);
+    }
+
+    #[test]
+    #[cfg(feature = "nav-types-conversion")]
+    fn test_nav_types_conversion() {
+        let wgs = Wgs84 {
+            longitude: 8.730497076,
+            latitude: 46.044130339,
+            altitude: 542.8,
+        };
+        let nav_type: WGS84<f64> = wgs.clone().into();
+        let back: Wgs84 = Wgs84::from(nav_type);
+
+        assert_eq!(wgs, back);
+        assert_eq!(wgs.longitude, nav_type.longitude_degrees());
+        assert_eq!(wgs.latitude, nav_type.latitude_degrees());
+        assert_eq!(wgs.altitude, nav_type.altitude());
     }
 }
