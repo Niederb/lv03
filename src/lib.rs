@@ -217,7 +217,11 @@ mod tests {
         let north = 70_000.0 + (300_000.0 - 70_000.0) * rng.rand_float() as f64;
         let east = 480_000.0 + (850_000.0 - 480_000.0) * rng.rand_float() as f64;
         let altitude = 400.0 + (5_000.0 - 400.0) * rng.rand_float() as f64;
-        Lv03 {north, east, altitude}
+        Lv03 {
+            north,
+            east,
+            altitude,
+        }
     }
 
     #[test]
