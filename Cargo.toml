@@ -17,4 +17,5 @@ default = []
 nav-types-conversion = ["nav-types"]
 
 [dependencies]
+oorandom = "11.1.2"
 nav-types = { version = "0.5.0", optional = true }

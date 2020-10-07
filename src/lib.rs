@@ -184,6 +184,7 @@ impl From<Lv95> for Wgs84 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use oorandom;
 
     fn test_conversions(lv: &Lv03, wgs: &Wgs84) {
         let wgs_converted = lv.to_wgs84();
@@ -210,6 +211,28 @@ mod tests {
 
         // Should be within one meter
         assert!(lv03.distance_squared(lv) < 1.0);
+    }
+
+    fn get_random_lv03(rng: &mut oorandom::Rand32) -> Lv03 {
+        let north = 70_000.0 + (300_000.0 - 70_000.0) * rng.rand_float() as f64;
+        let east = 480_000.0 + (850_000.0 - 480_000.0) * rng.rand_float() as f64;
+        let altitude = 400.0 + (5_000.0 - 400.0) * rng.rand_float() as f64;
+        Lv03 {north, east, altitude}
+    }
+
+    #[test]
+    fn random_locations() {
+        let some_seed = 13;
+        let mut generator = oorandom::Rand32::new(some_seed);
+        for _ in 0..1000 {
+            let lv03 = get_random_lv03(&mut generator);
+            let wgs84: Wgs84 = lv03.clone().into();
+            let new_lv03: Lv03 = wgs84.to_lv03().unwrap();
+            assert!((lv03.east - new_lv03.east).abs() < 5.0);
+            assert!((lv03.north - new_lv03.north).abs() < 5.0);
+            assert!((lv03.altitude - new_lv03.altitude).abs() < 1.0);
+            assert!(lv03.distance_squared(&new_lv03) < 30.0);
+        }
     }
 
     #[test]
