@@ -29,7 +29,7 @@ let wgs84 = lv03.to_wgs84();
 let wgs = Wgs84 {
     longitude: 7.65861,
     latitude: 45.97642,
-    altitude: 4477.4,
+    altitude: 4532.9,
 };
 let lv03 = wgs.to_lv03().unwrap();
 ```
