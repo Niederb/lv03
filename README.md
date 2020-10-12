@@ -14,3 +14,26 @@ The formulas are only an estimation. Accuracy should be within 1 meter or 0.1'' 
 
 See this document for implementation details:  
 https://www.swisstopo.admin.ch/de/swisstopo/dokumente.detail.document.html/swisstopo-internet/de/documents/geo-documents/ch1903wgs84_d.pdf.html
+
+## Examples
+### LV03 to WGS84
+```
+// Federal building
+let lv03 = Lv03::new(199_498.43, 600_421.43, 542.8).unwrap();
+let wgs84 = lv03.to_wgs84();
+```
+
+### WGS84 to LV03
+```
+// Matterhorn peak
+let wgs = Wgs84 {
+    longitude: 7.65861,
+    latitude: 45.97642,
+    altitude: 4477.4,
+};
+let lv03 = wgs.to_lv03().unwrap();
+```
+
+## Tips
+For manual conversions Swisstopo provides an online tool:  
+https://www.swisstopo.admin.ch/de/karten-daten-online/calculation-services/navref.html

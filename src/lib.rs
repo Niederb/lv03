@@ -189,10 +189,12 @@ mod tests {
         let wgs_converted = lv.to_wgs84();
         assert!((wgs_converted.longitude - wgs.longitude).abs() < 0.001);
         assert!((wgs_converted.latitude - wgs.latitude).abs() < 0.001);
+        assert!((wgs_converted.altitude - wgs.altitude).abs() < 5.0);
 
         let lv_converted = wgs.to_lv03().unwrap();
         assert!((lv_converted.east - lv.east).abs() < 2.0);
         assert!((lv_converted.north - lv.north).abs() < 2.0);
+        assert!((lv_converted.altitude - lv.altitude).abs() < 5.0);
 
         test_roundtrip_wgs(lv);
         test_roundtrip_lv(lv);
@@ -213,31 +215,34 @@ mod tests {
     }
 
     #[test]
-    fn to_lv03_bundeshaus() {
-        let lv = Lv03 {
-            east: 600_421.43,
-            north: 199_498.43,
-            altitude: 542.8,
-        };
+    fn test_bundeshaus() {
+        let lv = Lv03::new(199_498.43, 600_421.43, 542.8).unwrap();
         let wgs = Wgs84 {
             longitude: 7.44417,
             latitude: 46.94658,
-            altitude: 542.8,
+            altitude: 591.8,
         };
         test_conversions(&lv, &wgs);
     }
 
     #[test]
-    fn to_wgs84_700_100() {
-        let lv = Lv03 {
-            east: 700_000.0,
-            north: 100_000.0,
-            altitude: 542.8,
+    fn test_matterhorn() {
+        let lv = Lv03::new(91_673.72, 617_049.89, 4477.4).unwrap();
+        let wgs = Wgs84 {
+            longitude: 7.65861,
+            latitude: 45.97642,
+            altitude: 4532.9,
         };
+        test_conversions(&lv, &wgs);
+    }
+
+    #[test]
+    fn test_700_100() {
+        let lv = Lv03::new(100_000.0, 700_000.0, 1000.0).unwrap();
         let wgs = Wgs84 {
             longitude: 8.730497076,
             latitude: 46.044130339,
-            altitude: 542.8,
+            altitude: 1050.0,
         };
         test_conversions(&lv, &wgs);
     }
