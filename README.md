@@ -1,5 +1,5 @@
 # lv03
-![Rust](https://github.com/Niederb/lv03/workflows/Rust/badge.svg)
+![Rust](https://github.com/Niederb/lv03/workflows/build/badge.svg)
 
 This crate provides methods to convert Wgs84 coordinates into the Swiss coordinate formats LV03 (Landesvermessung 1903 or CH1903) and LV95 (Landesvermessung 1995 or CH1903+).
 
