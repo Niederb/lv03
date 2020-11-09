@@ -84,7 +84,7 @@ impl Lv03 {
     pub fn new(north: f64, east: f64, altitude: f64) -> Option<Self> {
         let valid_north_range = 70_000.0..300_000.0;
         let valid_east_range = 480_000.0..850_000.0;
-        
+
         #[allow(clippy::if_same_then_else)]
         if !valid_north_range.contains(&north) || !valid_east_range.contains(&east) {
             None
@@ -97,7 +97,6 @@ impl Lv03 {
                 east,
                 altitude,
             })
-            
         }
     }
 
