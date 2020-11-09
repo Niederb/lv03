@@ -82,11 +82,11 @@ pub struct Lv03 {
 impl Lv03 {
     /// Can return none if the given coordinates do not lead to a valid representation in the swiss coordinate system
     pub fn new(north: f64, east: f64, altitude: f64) -> Option<Self> {
+        let valid_north_range = 70_000.0..300_000.0;
+        let valid_east_range = 480_000.0..850_000.0;
+        
         #[allow(clippy::if_same_then_else)]
-        if north < 70_000.0 || east < 480_000.0 {
-            // Minimum coordinates to fall within Switzerland
-            None
-        } else if north > 300_000.0 || east > 850_000.0 {
+        if !valid_north_range.contains(&north) || !valid_east_range.contains(&east) {
             None
         } else if north > east {
             // East coordinate must always be bigger than north
@@ -97,6 +97,7 @@ impl Lv03 {
                 east,
                 altitude,
             })
+            
         }
     }
 
