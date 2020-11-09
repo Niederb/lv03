@@ -1,6 +1,6 @@
 [package]
 name = "lv03"
-version = "0.0.4"
+version = "0.0.5"
 authors = ["Thomas Niederberger <thomas@niederb.ch>"]
 edition = "2018"
 
@@ -17,8 +17,8 @@ default = []
 nav-types-conversion = ["nav-types"]
 
 [dependencies]
-oorandom = "11.1.2"
 nav-types = { version = "0.5.0", optional = true }
 
 [dev-dependencies]
 bmp = "0.5.0"
+oorandom = "11.1.2"
