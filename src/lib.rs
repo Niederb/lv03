@@ -3,6 +3,10 @@
 #[cfg(feature = "nav-types-conversion")]
 use nav_types::WGS84;
 
+#[cfg(test)]
+#[macro_use(quickcheck)]
+extern crate quickcheck_macros;
+
 /// WGS84 coordinate representation
 #[derive(Clone, Debug, PartialEq)]
 pub struct Wgs84 {
@@ -318,5 +322,15 @@ mod tests {
         assert_eq!(wgs.longitude, nav_type.longitude_degrees());
         assert_eq!(wgs.latitude, nav_type.latitude_degrees());
         assert_eq!(wgs.altitude, nav_type.altitude());
+    }
+
+    #[quickcheck]
+    fn roundtrip_test(north: f64, east: f64, altitude: f64) -> () {
+        let lv03 = Lv03::new(north,east, altitude);
+        if let Some(lv03) = lv03 {
+            let wgs84 = lv03.to_wgs84();
+            let lv03 = wgs84.to_lv03();
+            lv03.unwrap();
+        }
     }
 }
