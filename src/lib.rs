@@ -326,7 +326,8 @@ mod tests {
 
     #[quickcheck]
     fn roundtrip_test(north: f64, east: f64, altitude: f64) -> () {
-        let lv03 = Lv03::new(north,east, altitude);
+        //let lv03 = Lv03::new(north, east, altitude);
+        let lv03 = Lv03::new(f64::NAN, f64::NEG_INFINITY, f64::INFINITY);
         if let Some(lv03) = lv03 {
             let wgs84 = lv03.to_wgs84();
             let lv03 = wgs84.to_lv03();
