@@ -16,10 +16,10 @@ fn main() {
             let wgs84 = lv03.to_wgs84();
             if let Some(lv03_converted) = wgs84.to_lv03() {
                 //let error = lv03.distance_squared(&lv03_converted);
-                let error = ((lv03.north - lv03_converted.north).powi(2)
-                    + (lv03.east - lv03_converted.east).powi(2))
-                .sqrt();
-                img.set_pixel(x, y, Pixel::new((100.0 * error) as u8, 0, 0));
+                let error = (lv03.north - lv03_converted.north).powi(2)
+                    + (lv03.east - lv03_converted.east).powi(2);
+                let error = error.sqrt();
+                img.set_pixel(x, y, Pixel::new((10.0 * error) as u8, 0, 0));
             }
         }
     }
