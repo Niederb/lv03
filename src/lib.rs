@@ -3,6 +3,10 @@
 #[cfg(feature = "nav-types-conversion")]
 use nav_types::WGS84;
 
+#[cfg(test)]
+#[macro_use(quickcheck)]
+extern crate quickcheck_macros;
+
 /// WGS84 coordinate representation
 #[derive(Clone, Debug, PartialEq)]
 pub struct Wgs84 {
@@ -82,11 +86,11 @@ pub struct Lv03 {
 impl Lv03 {
     /// Can return none if the given coordinates do not lead to a valid representation in the swiss coordinate system
     pub fn new(north: f64, east: f64, altitude: f64) -> Option<Self> {
+        let valid_north_range = 70_000.0..300_000.0;
+        let valid_east_range = 480_000.0..850_000.0;
+
         #[allow(clippy::if_same_then_else)]
-        if north < 70_000.0 || east < 480_000.0 {
-            // Minimum coordinates to fall within Switzerland
-            None
-        } else if north > 300_000.0 || east > 850_000.0 {
+        if !valid_north_range.contains(&north) || !valid_east_range.contains(&east) {
             None
         } else if north > east {
             // East coordinate must always be bigger than north
@@ -318,5 +322,16 @@ mod tests {
         assert_eq!(wgs.longitude, nav_type.longitude_degrees());
         assert_eq!(wgs.latitude, nav_type.latitude_degrees());
         assert_eq!(wgs.altitude, nav_type.altitude());
+    }
+
+    #[quickcheck]
+    fn roundtrip_test(north: f64, east: f64, altitude: f64) -> () {
+        let lv03 = Lv03::new(north, east, altitude);
+        //let lv03 = Lv03::new(f64::NAN, f64::NEG_INFINITY, f64::INFINITY);
+        if let Some(lv03) = lv03 {
+            let wgs84 = lv03.to_wgs84();
+            let lv03 = wgs84.to_lv03();
+            lv03.unwrap();
+        }
     }
 }
