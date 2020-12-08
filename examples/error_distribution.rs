@@ -3,7 +3,7 @@ use lv03::Lv03;
 use bmp::{Image, Pixel};
 
 /** Example a creates an image showing how the error is
-* distributed accross Switzerland when converting to WGS84 and back.
+* distributed across Switzerland when converting to WGS84 and back.
 */
 fn main() {
     let mut img = Image::new(850 - 480, 300 - 70);
