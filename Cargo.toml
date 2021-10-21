@@ -1,8 +1,8 @@
 [package]
 name = "lv03"
-version = "0.0.5"
+version = "0.1.0"
 authors = ["Thomas Niederberger <thomas@niederb.ch>"]
-edition = "2018"
+edition = "2021"
 
 license = "MIT OR Apache-2.0"
 description = "Conversion between the Swiss coordinate system (LV03/CH1903 or LV95/CH1903+) and WGS84 coordinates"
