@@ -141,10 +141,7 @@ impl Lv03 {
 impl Lv95 {
     pub fn new(north: f64, east: f64, altitude: f64) -> Option<Self> {
         let p = Lv03::new(north, east, altitude);
-        match p {
-            Some(p) => Some(p.into()),
-            None => None,
-        }
+        p.map(|p| p.into())
     }
 
     pub fn to_wgs84(&self) -> Wgs84 {
