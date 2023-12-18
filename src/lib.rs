@@ -69,7 +69,7 @@ pub struct Lv95 {
     /// Coordinate pointing east. (Y coordinate)
     pub east: f64,
     /// Meters above sea level (Mediterranean Sea)
-    altitude: f64,
+    pub altitude: f64,
 }
 
 /// Coordinate point in the LV03 system (Landesvermessung 1903, CH1903)
