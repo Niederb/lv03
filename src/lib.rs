@@ -69,7 +69,7 @@ pub struct Lv95 {
     /// Coordinate pointing east. (Y coordinate)
     pub east: f64,
     /// Meters above sea level (Mediterranean Sea)
-    altitude: f64,
+    pub altitude: f64,
 }
 
 /// Coordinate point in the LV03 system (Landesvermessung 1903, CH1903)
@@ -140,7 +140,7 @@ impl Lv03 {
 
 impl Lv95 {
     pub fn new(north: f64, east: f64, altitude: f64) -> Option<Self> {
-        let p = Lv03::new(north, east, altitude);
+        let p = Lv03::new(north - 1_000_000.0, east - 2_000_000.0, altitude);
         p.map(|p| p.into())
     }
 
@@ -273,6 +273,11 @@ mod tests {
             altitude: 1050.0,
         };
         test_conversions(&lv, &wgs);
+    }
+
+    #[test]
+    fn test_positive() {
+        assert!(Lv95::new(1_100_000.0, 2_700_000.0, 1000.0).is_some());
     }
 
     #[test]
