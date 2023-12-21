@@ -59,6 +59,10 @@ impl Wgs84 {
         let altitude = self.altitude - 49.55 + 2.73 * lambda + 6.94 * phi;
         Lv03::new(x, y, altitude)
     }
+
+    pub fn to_lv95(&self) -> Option<Lv95> {
+        self.to_lv03().map(Into::into)
+    }
 }
 
 /// Coordinate point in the LV95 system (Landesvermessung 1995, CH1903+)
