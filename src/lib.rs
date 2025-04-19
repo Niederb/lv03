@@ -1,5 +1,8 @@
 #![no_std]
 
+#[cfg(feature = "serde-support")]
+use serde::{Deserialize, Serialize};
+
 #[cfg(feature = "nav-types-conversion")]
 use nav_types::WGS84;
 
@@ -9,6 +12,7 @@ extern crate quickcheck_macros;
 
 /// WGS84 coordinate representation
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub struct Wgs84 {
     /// Longitude in degrees
     pub longitude: f64,
@@ -67,6 +71,7 @@ impl Wgs84 {
 
 /// Coordinate point in the LV95 system (Landesvermessung 1995, CH1903+)
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub struct Lv95 {
     /// Coordinate pointing north. (X coordinate)
     pub north: f64,
@@ -78,6 +83,7 @@ pub struct Lv95 {
 
 /// Coordinate point in the LV03 system (Landesvermessung 1903, CH1903)
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde-support", derive(Serialize, Deserialize))]
 pub struct Lv03 {
     /// Coordinate pointing north. (X coordinate)
     pub north: f64,
